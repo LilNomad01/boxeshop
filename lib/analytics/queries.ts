@@ -29,8 +29,9 @@ export async function getRevenueStats(period: Period) {
     .lte("created_at", to.toISOString())
     .neq("status", "cancelled");
 
-  const totalRevenue = (data ?? []).reduce(((s: number, o: any) => s + Number(o.total_price), 0);
-  const totalOrders = data?.length ?? 0;
+  const rows: any[] = data ?? [];
+  const totalRevenue = rows.reduce((s: number, o: any) => s + Number(o.total_price), 0);
+  const totalOrders = rows.length;
   const avgTicket = totalOrders ? totalRevenue / totalOrders : 0;
   return { totalRevenue, totalOrders, avgTicket };
 }
@@ -44,9 +45,10 @@ export async function getOrdersStats(period: Period) {
     .gte("created_at", from.toISOString())
     .lte("created_at", to.toISOString());
 
-  const total = data?.length ?? 0;
-  const synced = (data ?? []).filter(o => o.ecomhub_sync_status === "synced").length;
-  const failed = (data ?? []).filter(o =>
+  const rows: any[] = data ?? [];
+  const total = rows.length;
+  const synced = rows.filter((o: any) => o.ecomhub_sync_status === "synced").length;
+  const failed = rows.filter((o: any) =>
     o.ecomhub_sync_status === "failed" || o.ecomhub_sync_status === "pending_ecomhub_sync"
   ).length;
 
@@ -64,8 +66,9 @@ export async function getSalesByDay(period: Period) {
     .neq("status", "cancelled")
     .order("created_at", { ascending: true });
 
+  const rows: any[] = data ?? [];
   const map = new Map<string, { date: string; revenue: number; orders: number }>();
-  for (const o of (data as any[]) ?? []) {
+  for (const o of rows) {
     const day = format(new Date(o.created_at), "yyyy-MM-dd");
     const cur = map.get(day) ?? { date: day, revenue: 0, orders: 0 };
     cur.revenue += Number(o.total_price);
@@ -84,8 +87,9 @@ export async function getOrdersByStatus(period: Period) {
     .gte("created_at", from.toISOString())
     .lte("created_at", to.toISOString());
 
+  const rows: any[] = data ?? [];
   const counts = new Map<string, number>();
-  for (const o of (data as any[]) ?? []) counts.set(o.status, (counts.get(o.status) ?? 0) + 1);
+  for (const o of rows) counts.set(o.status, (counts.get(o.status) ?? 0) + 1);
   return Array.from(counts, ([status, count]) => ({ status, count }));
 }
 
@@ -98,8 +102,9 @@ export async function getPaymentMethods(period: Period) {
     .gte("created_at", from.toISOString())
     .lte("created_at", to.toISOString());
 
+  const rows: any[] = data ?? [];
   const counts = new Map<string, number>();
-  for (const o of (data as any[]) ?? []) counts.set(o.payment_method, (counts.get(o.payment_method) ?? 0) + 1);
+  for (const o of rows) counts.set(o.payment_method, (counts.get(o.payment_method) ?? 0) + 1);
   return Array.from(counts, ([method, count]) => ({ method, count }));
 }
 
@@ -113,8 +118,9 @@ export async function getTopCountries(period: Period, limit = 10) {
     .lte("created_at", to.toISOString())
     .neq("status", "cancelled");
 
+  const rows: any[] = data ?? [];
   const counts = new Map<string, { country: string; orders: number; revenue: number }>();
-  for (const o of (data as any[]) ?? []) {
+  for (const o of rows) {
     const key = o.shipping_country_code;
     const cur = counts.get(key) ?? { country: key, orders: 0, revenue: 0 };
     cur.orders += 1;
@@ -135,7 +141,8 @@ export async function getBestSellingProducts(period: Period, limit = 10) {
     .lte("created_at", to.toISOString())
     .neq("status", "cancelled");
 
-  const orderIds = (orders ?? []).map(o => o.id);
+  const orderRows: any[] = orders ?? [];
+  const orderIds = orderRows.map((o: any) => o.id);
   if (!orderIds.length) return [];
 
   const { data: items } = await sb
@@ -143,8 +150,9 @@ export async function getBestSellingProducts(period: Period, limit = 10) {
     .select("product_id, product_name, quantity, total_price")
     .in("order_id", orderIds);
 
+  const itemRows: any[] = items ?? [];
   const map = new Map<string, { product_id: string; name: string; qty: number; revenue: number; orders: number }>();
-  for (const it of (items as any[]) ?? []) {
+  for (const it of itemRows) {
     const key = it.product_id ?? it.product_name;
     const cur = map.get(key) ?? { product_id: key, name: it.product_name, qty: 0, revenue: 0, orders: 0 };
     cur.qty += it.quantity;
@@ -161,8 +169,9 @@ export async function getEcomHubSyncStats() {
     .from("orders")
     .select("ecomhub_sync_status");
 
+  const rows: any[] = data ?? [];
   const counts = { synced: 0, pending: 0, failed: 0, pending_retry: 0 };
-  for (const o of (data as any[]) ?? []) {
+  for (const o of rows) {
     if (o.ecomhub_sync_status === "synced") counts.synced++;
     else if (o.ecomhub_sync_status === "failed") counts.failed++;
     else if (o.ecomhub_sync_status === "pending_ecomhub_sync") counts.pending_retry++;
