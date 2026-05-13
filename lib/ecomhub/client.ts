@@ -19,7 +19,7 @@ const BASE_URL = process.env.ECOMHUB_BASE_URL ?? "https://api.ecomhub.app";
 const TOKEN = process.env.ECOMHUB_TOKEN;
 const SECRET = process.env.ECOMHUB_SECRET;
 
-function assertEnv(): asserts TOKEN is string {
+function assertEnv() {
   if (!TOKEN || !SECRET) {
     throw new Error(
       "ECOMHUB_TOKEN e ECOMHUB_SECRET precisam estar definidos no .env"
