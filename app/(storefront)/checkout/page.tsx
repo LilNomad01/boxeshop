@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { CheckoutForm } from "./checkout-form";
 
 export default async function CheckoutPage({
@@ -8,7 +8,7 @@ export default async function CheckoutPage({
   searchParams: Promise<{ productId?: string }>;
 }) {
   const sp = await searchParams;
-  const sb = await createClient();
+  const sb = createAdminClient();
   const { data: product } = await sb
     .from("products")
     .select("id, name, price, currency_code, image_url, ecomhub_variant_id, status")
