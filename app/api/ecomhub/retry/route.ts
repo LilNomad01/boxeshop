@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         country_id: o.shipping_country_id,
         city: o.shipping_city,
       },
-      lineItems: (items ?? []).map(i => ({ id: i.variant_id, quantity: i.quantity })),
+      lineItems: (items ?? []).map((i: any) => ({ id: i.variant_id, quantity: i.quantity })),
     };
 
     const result = await createEcomHubOrder(payload);
