@@ -134,7 +134,7 @@ export async function POST(req: Request) {
   // 5) Enviar para EcomHub (usa moeda da EcomHub, NÃO a do banco)
   const payload = {
     price: totalPrice,
-    currency_code: ecomhubCurrency,
+    currency_code: "EUR",
     paymentMethod: data.paymentMethod,
     external_id: externalId,
     shippingAddress: {

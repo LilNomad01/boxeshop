@@ -58,7 +58,7 @@ export async function POST(req: Request) {
 
       const payload = {
         price: Number(o.total_price),
-        currency_code: ecomhubCurrency,
+        currency_code: "EUR",
         paymentMethod: o.payment_method as any,
         external_id: o.external_id,
         shippingAddress: {
