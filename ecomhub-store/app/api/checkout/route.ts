@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/server";
 import { createEcomHubOrder, getEcomHubCountries } from "@/lib/ecomhub/client";
+import type { EcomHubPaymentMethod } from "@/lib/ecomhub/types";
 
-export const dynamic = "force-dynamic";
-
+// Schema de validação rigoroso
 const checkoutSchema = z.object({
   customer: z.object({
     firstName: z.string().min(1).max(100),
@@ -46,23 +46,8 @@ export async function POST(req: Request) {
   const data = parsed.data;
   const sb = createAdminClient();
 
-  // 1) Buscar moeda correta da EcomHub pelo country_id
-  let ecomhubCurrency = "EUR"; // fallback
-  try {
-    const countriesResult = await getEcomHubCountries();
-    if (countriesResult.ok) {
-      const country = countriesResult.data.find((c: any) => c.id === data.shipping.country_id);
-      if (country?.currencies?.code) {
-        ecomhubCurrency = country.currencies.code;
-      }
-    }
-  } catch (err) {
-    console.log("[checkout] failed to fetch countries, using EUR fallback");
-  }
-  console.log("[checkout] using currency:", ecomhubCurrency);
-
-  // 2) Buscar produtos
-  const productIds = data.items.map((i: any) => i.productId);
+  // 1) Buscar produtos e calcular total no servidor (NUNCA confiar no preço do cliente)
+  const productIds = data.items.map(i => i.productId);
   const { data: products, error: prodErr } = await sb
     .from("products")
     .select("id, name, price, currency_code, ecomhub_variant_id, status")
@@ -71,15 +56,26 @@ export async function POST(req: Request) {
   if (prodErr || !products?.length) {
     return NextResponse.json({ error: "Produtos não encontrados" }, { status: 404 });
   }
-  if (products.find((p: any) => p.status !== "active")) {
+  const inactive = products.find((p: any) => p.status !== "active");
+  if (inactive) {
     return NextResponse.json({ error: "Produto indisponível" }, { status: 400 });
   }
 
-  // 3) Calcular total no servidor
+  // Busca a moeda correta do EcomHub para o país de entrega
+  const countriesResult = await getEcomHubCountries();
+  let ecomhubCurrency = "EUR";
+  if (countriesResult.ok) {
+    const country = countriesResult.data.find(c => c.id === data.shipping.country_id);
+    if (country?.currencies?.code) {
+      ecomhubCurrency = country.currencies.code;
+    }
+  }
+
+  // Calcula total
   let totalPrice = 0;
-  const dbCurrency = (products[0] as any).currency_code ?? "RON";
   const lineItemsForDb: any[] = [];
   const lineItemsForEcomhub: { id: string; quantity: number }[] = [];
+  const dbCurrency = (products[0] as any).currency_code ?? "RON";
 
   for (const item of data.items) {
     const p = products.find((x: any) => x.id === item.productId) as any;
@@ -97,7 +93,7 @@ export async function POST(req: Request) {
     lineItemsForEcomhub.push({ id: p.ecomhub_variant_id, quantity: item.quantity });
   }
 
-  // 4) Criar pedido no banco (usa moeda local RON)
+  // 2) Cria pedido no banco (status pending, sync_status pending)
   const externalId = crypto.randomUUID();
   const { data: order, error: orderErr } = await sb
     .from("orders")
@@ -115,8 +111,8 @@ export async function POST(req: Request) {
       shipping_postal_code: data.shipping.postalCode,
       total_price: totalPrice,
       currency_code: dbCurrency,
-      payment_method: data.paymentMethod,
-      status: "pending",
+      payment_method: data.paymentMethod as EcomHubPaymentMethod,
+      status: data.paymentMethod === "cash on delivery" ? "pending" : "pending",
       ecomhub_sync_status: "pending",
     })
     .select("id, external_id")
@@ -127,15 +123,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Falha ao criar pedido" }, { status: 500 });
   }
 
+  // Insere line items
   await sb.from("order_items").insert(
-    lineItemsForDb.map((li: any) => ({ ...li, order_id: order.id }))
+    lineItemsForDb.map(li => ({ ...li, order_id: order.id }))
   );
 
-  // 5) Enviar para EcomHub (usa moeda da EcomHub, NÃO a do banco)
+  // 3) Envia para EcomHub — manda name E firstName pra cobrir as duas versões da API
   const payload = {
     price: totalPrice,
     currency_code: ecomhubCurrency,
-    paymentMethod: data.paymentMethod,
+    paymentMethod: data.paymentMethod as EcomHubPaymentMethod,
     external_id: externalId,
     shippingAddress: {
       countryCode: data.shipping.countryCode,
@@ -154,13 +151,9 @@ export async function POST(req: Request) {
     lineItems: lineItemsForEcomhub,
   };
 
-  console.log("[checkout] sending to ecomhub:", JSON.stringify(payload));
-
   const result = await createEcomHubOrder(payload);
 
-  console.log("[checkout] ecomhub response:", JSON.stringify(result));
-
-  // 6) Logar
+  // 4) Loga a chamada
   await sb.from("ecomhub_logs").insert({
     order_id: order.id,
     action: "create_order",
@@ -173,7 +166,7 @@ export async function POST(req: Request) {
     duration_ms: result.durationMs,
   });
 
-  // 7) Atualizar pedido
+  // 5) Atualiza pedido com resposta
   if (result.ok) {
     await sb.from("orders").update({
       ecomhub_order_id: result.data.id,
@@ -186,6 +179,7 @@ export async function POST(req: Request) {
       ecomhub_error_code: result.error.code,
       ecomhub_error_context: result.error.context,
     }).eq("id", order.id);
+    // Não retorna erro pro cliente — pedido foi salvo, retry depois
   }
 
   return NextResponse.json({
