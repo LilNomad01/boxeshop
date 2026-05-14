@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { TestimonialCarousel } from "./testimonials";
 
 export default async function StorefrontPage() {
-  const sb = await createClient();
+  const sb = createAdminClient();
   const { data: product } = await sb
     .from("products")
     .select("*")
