@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/server";
-import { createEcomHubOrder, getEcomHubCountries } from "@/lib/ecomhub/client";
+import { createEcomHubOrder } from "@/lib/ecomhub/client";
 
 export const dynamic = "force-dynamic";
 
@@ -122,7 +122,7 @@ export async function POST(req: Request) {
   // 5) Enviar para EcomHub (usa moeda da EcomHub, NÃO a do banco)
   const payload = {
     price: totalPrice,
-    currency_code: "EUR",
+    currency_code: "RON",
     paymentMethod: data.paymentMethod,
     external_id: externalId,
     shippingAddress: {
