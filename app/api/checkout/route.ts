@@ -46,20 +46,8 @@ export async function POST(req: Request) {
   const data = parsed.data;
   const sb = createAdminClient();
 
-  // 1) Buscar moeda correta da EcomHub pelo country_id
-  let ecomhubCurrency = "EUR"; // fallback
-  try {
-    const countriesResult = await getEcomHubCountries();
-    if (countriesResult.ok) {
-      const country = countriesResult.data.find((c: any) => c.id === data.shipping.country_id);
-      if (country?.currencies?.code) {
-        ecomhubCurrency = country.currencies.code;
-      }
-    }
-  } catch (err) {
-    console.log("[checkout] failed to fetch countries, using EUR fallback");
-  }
-  console.log("[checkout] using currency:", ecomhubCurrency);
+  // Moeda da carteira EcomHub (a loja opera em EUR)
+  const ecomhubCurrency = "EUR";
 
   // 2) Buscar produtos
   const productIds = data.items.map((i: any) => i.productId);
