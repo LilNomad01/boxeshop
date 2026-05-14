@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.css"
+import { TikTokPixel } from "./tiktok-pixel";
 
 export const metadata: Metadata = {
   title: "EcomHub Store",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased"><TikTokPixel />{children}</body>
     </html>
   );
 }
