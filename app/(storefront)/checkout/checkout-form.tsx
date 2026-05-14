@@ -39,9 +39,9 @@ export function CheckoutForm({ product }: { product: any }) {
         city: String(fd.get("city") ?? ""),
         province: String(fd.get("province") ?? "") || null,
         address1: String(fd.get("address1") ?? ""),
-        postalCode: "000000",
+        postalCode: String(fd.get("postalCode") ?? "000000"),
       },
-      paymentMethod: "cash on delivery" as const,
+      paymentMethod: "cod" as const,
       items: [{ productId: product.id, quantity: 1 }],
     };
 
@@ -143,6 +143,21 @@ export function CheckoutForm({ product }: { product: any }) {
             <span className="text-amber-600">👉</span>
             <input
               name="address1"
+              required
+              placeholder="Scrie aici..."
+              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
+            />
+          </div>
+        </div>
+
+{/* Cod Poștal */}
+        <div>
+          <label className="block font-bold text-base mb-1">Cod Poștal:</label>
+          <p className="text-xs text-gray-500 italic mb-1">(exemplu: 400114)</p>
+          <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
+            <span className="text-amber-600">👉</span>
+            <input
+              name="postalCode"
               required
               placeholder="Scrie aici..."
               className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
