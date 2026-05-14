@@ -34,7 +34,7 @@ export type EcomHubOrder = {
 };
 
 export type EcomHubPaymentMethod =
-  | "card" | "paypal" | "transfer" | "cash on delivery" | "financial" | "other";
+  | "card" | "paypal" | "transfer" | "cod" | "financial" | "other";
 
 export type EcomHubCreateOrderInput = {
   price: number;
