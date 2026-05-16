@@ -21,7 +21,7 @@ const checkoutSchema = z.object({
     address2: z.string().max(200).optional(),
     postalCode: z.string().min(1).max(20),
   }),
-  paymentMethod: z.enum(["card", "paypal", "transfer", "cash on delivery", "financial", "other"]),
+  paymentMethod: z.enum(["card", "paypal", "transfer", "cod", "financial", "other"]),
   items: z.array(z.object({
     productId: z.string().uuid(),
     quantity: z.number().int().positive(),
