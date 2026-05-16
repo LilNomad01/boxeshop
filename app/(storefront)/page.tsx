@@ -149,10 +149,7 @@ export default async function StorefrontPage() {
       </section>
 
       {/* ====== STEPS SECTION ====== */}
-      <section className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-14 items-start">
-        <div className="rounded-2xl overflow-hidden">
-          <img src="/images/07-piscina-homem-perto.png" alt="JBL în piscină" className="w-full object-cover rounded-2xl" />
-        </div>
+      <section className="max-w-3xl mx-auto px-6 py-16">
         <div>
           <h2 className="text-3xl md:text-4xl font-semibold mb-4 tracking-tight">De la asociere la petrecere</h2>
           <p className="text-gray-500 mb-3">Instalează-l rapid, apasă play și lasă camera să prindă viață cu sunetul puternic JBL.</p>
