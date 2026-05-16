@@ -7,13 +7,13 @@ export default function StorefrontLayout({ children }: { children: React.ReactNo
           <span>•</span>
           <span>Returnări fără complicații în 30 de zile</span>
           <span>•</span>
-          <span>Livrare în 1 săptămână</span>
+          <span>Livrare în 24-48h</span>
           <span>•</span>
           <span>Transport gratuit pentru comenzi peste 50 RON</span>
           <span>•</span>
           <span>Returnări fără complicații în 30 de zile</span>
           <span>•</span>
-          <span>Livrare în 1 săptămână</span>
+          <span>Livrare în 24-48h</span>
         </div>
       </div>
       <header className="border-b py-4 px-6 sticky top-0 bg-white z-50">

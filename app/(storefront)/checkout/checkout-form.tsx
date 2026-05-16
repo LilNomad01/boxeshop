@@ -1,4 +1,5 @@
 "use client";
+import Script from "next/script";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -224,5 +225,13 @@ export function CheckoutForm({ product }: { product: any }) {
         </p>
       </form>
     </main>
+  );
+}
+
+export function CheckoutPixel() {
+  return (
+    <Script id="ttq-checkout" strategy="afterInteractive">
+      {`if(window.ttq){ttq.track('InitiateCheckout');}`}
+    </Script>
   );
 }

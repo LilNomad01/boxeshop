@@ -4,6 +4,7 @@ import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { TestimonialCarousel } from "./testimonials";
 
+// TikTok ViewContent fires via layout pixel
 export default async function StorefrontPage() {
   const sb = createAdminClient();
   const { data: product } = await sb
@@ -75,7 +76,7 @@ export default async function StorefrontPage() {
 
             <div className="bg-gray-50 rounded-xl p-6 mb-5">
               <div className="flex justify-around text-sm pb-5 border-b border-gray-200 mb-5">
-                <span>✓ Livrare în 1 săptămână</span>
+                <span>✓ Livrare în 24-48h</span>
                 <span>✓ Transport gratuit</span>
                 <span>✓ Ușor de returnat</span>
               </div>
