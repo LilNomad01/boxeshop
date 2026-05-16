@@ -37,10 +37,6 @@ export default async function StorefrontPage() {
             <div className="flex items-center justify-center py-8">
               <img src="/images/01-produto-principal.png" alt={product.name} className="w-full max-w-lg mix-blend-multiply" />
             </div>
-            <div className="flex bg-black rounded-full overflow-hidden">
-              <button className="flex-1 py-4 text-white text-sm font-medium">Vedeți în acțiune</button>
-              <button className="flex-1 py-4 text-white/70 text-sm font-medium hover:text-white transition-colors">Vizualizați difuzorul wireless</button>
-            </div>
           </div>
 
           <div>
@@ -90,10 +86,6 @@ export default async function StorefrontPage() {
             <div className="mb-6 mx-auto max-w-sm">
               <img src="/images/gls-shipping.png" alt="Livrare GLS gratuita in toata Romania in 24-48h" className="w-full rounded-lg shadow-sm" />
             </div>
-            {/* Banner GLS */}
-            <div className="mb-6 mx-auto max-w-sm">
-              <img src="/images/gls-shipping.png" alt="Livrare GLS gratuita in toata Romania in 24-48h" className="w-full rounded-lg shadow-sm" />
-            </div>
 <div className="bg-amber-50 rounded-xl p-6 flex gap-5 items-center mb-8">
               <div className="flex-shrink-0 w-20 h-20 rounded-full bg-white border-2 border-amber-700/30 flex flex-col items-center justify-center">
                 <span className="text-2xl font-extrabold">60</span>
@@ -103,14 +95,6 @@ export default async function StorefrontPage() {
                 <h3 className="font-bold mb-1">Garanție de returnare a banilor în 60 de zile</h3>
                 <p className="text-sm text-gray-600">Vrem să zâmbești de la prima melodie. Dacă această boxă nu-ți place, returnează-o pentru o rambursare integrală. Simplu, fără riscuri și ușor.</p>
               </div>
-            </div>
-
-            <h2 className="text-xl font-bold mb-4">Rezultate reale de la clienți reali</h2>
-            <div className="grid grid-cols-4 gap-2 mb-8">
-              <img src="/images/02-praia-jbl.png" alt="" className="aspect-square object-cover rounded-lg" />
-              <img src="/images/03-piscina-agua.png" alt="" className="aspect-square object-cover rounded-lg" />
-              <img src="/images/04-piscina-homem-longe.png" alt="" className="aspect-square object-cover rounded-lg" />
-              <img src="/images/05-skate-menina.png" alt="" className="aspect-square object-cover rounded-lg" />
             </div>
 
             <details className="border-b py-4 group">
