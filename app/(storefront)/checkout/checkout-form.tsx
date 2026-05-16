@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { TrackInitiateCheckout } from "@/app/tiktok-events";
 import { useRouter } from "next/navigation";
 
 const COUNTRIES = [
@@ -63,6 +64,8 @@ export function CheckoutForm({ product }: { product: any }) {
   }
 
   return (
+    <>
+      <TrackInitiateCheckout />
     <main className="max-w-md mx-auto px-4 py-6 pb-24">
       <div className="bg-blue-600 text-white text-center py-3 rounded-t-lg font-bold text-sm">
         ▼ COMPLETEAZĂ DATELE PENTRU LIVRARE ▼
@@ -183,5 +186,6 @@ export function CheckoutForm({ product }: { product: any }) {
         <p className="text-center text-xs text-gray-500">🔒 Plată sigură la livrare · Fără riscuri</p>
       </form>
     </main>
+  </>
   );
 }

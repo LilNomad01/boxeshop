@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { TrackPlaceAnOrder } from "@/app/tiktok-events";
 
 export default async function SuccessPage({
   searchParams,
@@ -13,7 +14,8 @@ export default async function SuccessPage({
     <main className="max-w-2xl mx-auto px-6 py-16">
       <Card>
         <CardContent className="p-12 text-center space-y-4">
-          <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" /><script dangerouslySetInnerHTML={{__html:`if(window.ttq){ttq.track("CompletePayment",{value:469,currency:"RON"})}`}} />
+          <TrackPlaceAnOrder orderId={sp.orderId} />
+          <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" />
           <h1 className="text-3xl font-bold">Comandă plasată cu succes!</h1>
           <p className="text-muted-foreground">
             Mulțumim pentru comandă. Te vom contacta în scurt timp pentru a confirma livrarea.

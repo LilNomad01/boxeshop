@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackViewContent } from "@/app/tiktok-events";
 import { createAdminClient } from "@/lib/supabase/server";
 import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
@@ -15,6 +16,8 @@ export default async function StorefrontPage() {
 
   if (!product) {
     return (
+      <>
+        <TrackViewContent />
       <div className="max-w-3xl mx-auto p-12 text-center">
         <h2 className="text-2xl font-bold mb-2">Nenhum produto disponível</h2>
         <p className="text-muted-foreground">Cadastre produtos no painel admin.</p>
@@ -400,5 +403,6 @@ export default async function StorefrontPage() {
         <p className="opacity-50">Transport gratuit · Returnări 60 de zile · Suport 24/7</p>
       </footer>
     </>
+  </>
   );
 }
