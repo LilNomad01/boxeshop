@@ -1,9 +1,7 @@
 "use client";
-import Script from "next/script";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-// ============ PAÍSES (mocked, pegar real do EcomHub) ============
 const COUNTRIES = [
   { code: "RO", id: 142, name: "România" },
 ];
@@ -19,13 +17,11 @@ export function CheckoutForm({ product }: { product: any }) {
     setError(null);
     const fd = new FormData(e.currentTarget);
 
-    // Quebra "Nume și Prenume" em first/last
     const fullName = String(fd.get("fullName") ?? "").trim();
     const parts = fullName.split(/\s+/);
     const firstName = parts[0] ?? "";
     const lastName = parts.slice(1).join(" ") || firstName;
-
-    const country = COUNTRIES[0]; // RO fixo por enquanto
+    const country = COUNTRIES[0];
 
     const payload = {
       customer: {
@@ -40,6 +36,7 @@ export function CheckoutForm({ product }: { product: any }) {
         city: String(fd.get("city") ?? ""),
         province: String(fd.get("province") ?? "") || null,
         address1: String(fd.get("address1") ?? ""),
+        address2: String(fd.get("address2") ?? "") || undefined,
         postalCode: String(fd.get("postalCode") ?? "000000"),
       },
       paymentMethod: "cod" as const,
@@ -67,7 +64,6 @@ export function CheckoutForm({ product }: { product: any }) {
 
   return (
     <main className="max-w-md mx-auto px-4 py-6 pb-24">
-      {/* Banner azul "PREENCHA O ENDEREÇO" */}
       <div className="bg-blue-600 text-white text-center py-3 rounded-t-lg font-bold text-sm">
         ▼ COMPLETEAZĂ DATELE PENTRU LIVRARE ▼
       </div>
@@ -80,12 +76,7 @@ export function CheckoutForm({ product }: { product: any }) {
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: Ion Popescu)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input
-              name="fullName"
-              required
-              placeholder="Scrie aici..."
-              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
-            />
+            <input name="fullName" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
           </div>
         </div>
 
@@ -95,14 +86,7 @@ export function CheckoutForm({ product }: { product: any }) {
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: 0751234567 - trebuie început cu 07)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input
-              name="phone"
-              type="tel"
-              required
-              pattern="07[0-9]{8}"
-              placeholder="Scrie aici..."
-              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
-            />
+            <input name="phone" type="tel" required pattern="07[0-9]{8}" placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
           </div>
         </div>
 
@@ -112,12 +96,7 @@ export function CheckoutForm({ product }: { product: any }) {
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: Cluj - trebuie scris doar județul)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input
-              name="province"
-              required
-              placeholder="Scrie aici..."
-              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
-            />
+            <input name="province" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
           </div>
         </div>
 
@@ -127,50 +106,44 @@ export function CheckoutForm({ product }: { product: any }) {
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: comuna Floresti, sat Luna de Sus)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input
-              name="city"
-              required
-              placeholder="Scrie aici..."
-              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
-            />
+            <input name="city" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
           </div>
         </div>
 
-        {/* Strada */}
+        {/* Strada și Numărul */}
         <div>
           <label className="block font-bold text-base mb-1">Strada și Numărul:</label>
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: str. Unirii, nr. 34, Bloc B, Etaj 5, Ap. 18)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input
-              name="address1"
-              required
-              placeholder="Scrie aici..."
-              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
-            />
+            <input name="address1" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
           </div>
         </div>
 
-{/* Cod Poștal */}
+        {/* Detalii adresă (address2) */}
+        <div>
+          <label className="block font-bold text-base mb-1">Detalii adresă: <span className="font-normal text-gray-600">(opțional)</span></label>
+          <p className="text-xs text-gray-500 italic mb-1">(exemplu: Bloc B, Scara 2, Etaj 5, Apartament 18)</p>
+          <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
+            <span className="text-amber-600">👉</span>
+            <input name="address2" placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
+          </div>
+        </div>
+
+        {/* Cod Poștal */}
         <div>
           <label className="block font-bold text-base mb-1">Cod Poștal:</label>
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: 400114)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input
-              name="postalCode"
-              required
-              placeholder="Scrie aici..."
-              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
-            />
+            <input name="postalCode" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
           </div>
         </div>
 
         {/* Livrare */}
         <div className="pt-3">
-          <label className="block font-bold text-base mb-1">Livrare în 24 ore - Plata la livrare</label>
+          <label className="block font-bold text-base mb-1">Livrare în 24-48h - Plata la livrare</label>
           <p className="text-xs text-gray-600 mb-3">🇷🇴 Expediem din depozitul nostru Românesc! 🇷🇴</p>
-
           <div className="border-2 border-green-600 bg-green-600 text-white rounded-lg p-3">
             <div className="flex items-center justify-between">
               <span className="text-sm font-bold">🎉 TRANSPORT GRATUIT — Plata la curier</span>
@@ -203,35 +176,12 @@ export function CheckoutForm({ product }: { product: any }) {
           </div>
         )}
 
-        {/* Botão verde grandão */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white py-5 rounded-lg font-bold text-lg flex items-center justify-center gap-3 shadow-lg transition-colors"
-        >
-          {loading ? (
-            "Se procesează..."
-          ) : (
-            <>
-              <span>👉</span>
-              <span className="tracking-wide">TRIMITE COMANDA</span>
-              <span>👈</span>
-            </>
-          )}
+        <button type="submit" disabled={loading} className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white py-5 rounded-lg font-bold text-lg flex items-center justify-center gap-3 shadow-lg transition-colors">
+          {loading ? "Se procesează..." : (<><span>👉</span><span className="tracking-wide">TRIMITE COMANDA</span><span>👈</span></>)}
         </button>
 
-        <p className="text-center text-xs text-gray-500">
-          🔒 Plată sigură la livrare · Fără riscuri
-        </p>
+        <p className="text-center text-xs text-gray-500">🔒 Plată sigură la livrare · Fără riscuri</p>
       </form>
     </main>
-  );
-}
-
-export function CheckoutPixel() {
-  return (
-    <Script id="ttq-checkout" strategy="afterInteractive">
-      {`if(window.ttq){ttq.track('InitiateCheckout');}`}
-    </Script>
   );
 }

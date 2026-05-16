@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/server";
-import { createEcomHubOrder } from "@/lib/ecomhub/client";
+import { createEcomHubOrder, getEcomHubCountries } from "@/lib/ecomhub/client";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +21,7 @@ const checkoutSchema = z.object({
     address2: z.string().max(200).optional(),
     postalCode: z.string().min(1).max(20),
   }),
-  paymentMethod: z.enum(["card", "paypal", "transfer", "cod", "financial", "other"]),
+  paymentMethod: z.enum(["card", "paypal", "transfer", "cash on delivery", "financial", "other"]),
   items: z.array(z.object({
     productId: z.string().uuid(),
     quantity: z.number().int().positive(),
@@ -46,8 +46,20 @@ export async function POST(req: Request) {
   const data = parsed.data;
   const sb = createAdminClient();
 
-  // Moeda da carteira EcomHub (a loja opera em EUR)
-  const ecomhubCurrency = "EUR";
+  // 1) Buscar moeda correta da EcomHub pelo country_id
+  let ecomhubCurrency = "EUR"; // fallback
+  try {
+    const countriesResult = await getEcomHubCountries();
+    if (countriesResult.ok) {
+      const country = countriesResult.data.find((c: any) => c.id === data.shipping.country_id);
+      if (country?.currencies?.code) {
+        ecomhubCurrency = country.currencies.code;
+      }
+    }
+  } catch (err) {
+    console.log("[checkout] failed to fetch countries, using EUR fallback");
+  }
+  console.log("[checkout] using currency:", ecomhubCurrency);
 
   // 2) Buscar produtos
   const productIds = data.items.map((i: any) => i.productId);
@@ -85,7 +97,12 @@ export async function POST(req: Request) {
     lineItemsForEcomhub.push({ id: p.ecomhub_variant_id, quantity: item.quantity });
   }
 
-  // 4) Criar pedido no banco (usa moeda local RON)
+  // 4) Capturar IP do visitante
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+
+  // 5) Criar pedido no banco (usa moeda local RON)
   const externalId = crypto.randomUUID();
   const { data: order, error: orderErr } = await sb
     .from("orders")
@@ -106,6 +123,7 @@ export async function POST(req: Request) {
       payment_method: data.paymentMethod,
       status: "pending",
       ecomhub_sync_status: "pending",
+      ip_address: ip,
     })
     .select("id, external_id")
     .single();
@@ -122,7 +140,7 @@ export async function POST(req: Request) {
   // 5) Enviar para EcomHub (usa moeda da EcomHub, NÃO a do banco)
   const payload = {
     price: totalPrice,
-    currency_code: "RON",
+    currency_code: ecomhubCurrency,
     paymentMethod: data.paymentMethod,
     external_id: externalId,
     shippingAddress: {
