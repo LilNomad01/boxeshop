@@ -4,7 +4,6 @@ import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { TestimonialCarousel } from "./testimonials";
 
-// TikTok ViewContent fires via layout pixel
 export default async function StorefrontPage() {
   const sb = createAdminClient();
   const { data: product } = await sb
@@ -66,6 +65,19 @@ export default async function StorefrontPage() {
             </ul>
 
             <p className="text-center text-sm text-gray-500 mb-2">Adu ritmul acasă</p>
+
+            {/* Barra de escassez */}
+            <div className="bg-red-50 border border-red-100 rounded-lg p-3 mb-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-sm font-bold text-red-700">🔥 Stoc limitat!</span>
+                <span className="text-xs font-semibold text-red-600">Doar 7 bucăți rămase</span>
+              </div>
+              <div className="w-full bg-red-100 rounded-full h-2.5">
+                <div className="bg-red-500 h-2.5 rounded-full" style={{width: "83%"}} />
+              </div>
+              <p className="text-[11px] text-red-500 mt-1.5">⚡ 34 de persoane au cumpărat în ultimele 24 de ore</p>
+            </div>
+
             <Link href={checkoutUrl}>
               <button className="w-full bg-black text-white py-5 rounded-lg text-base font-semibold flex items-center justify-center gap-3 hover:bg-gray-900 transition-colors">
                 <ShoppingCart className="h-5 w-5" />
@@ -330,22 +342,25 @@ export default async function StorefrontPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
             {[
-              { img: "/images/social-proof/cliente-1.png.jpeg", name: "Andrei M.", city: "București", text: "A venit în 3 zile! Sunetul e incredibil 🔥" },
-              { img: "/images/social-proof/cliente-2.png.jpeg", name: "Maria P.", city: "Cluj-Napoca", text: "Cadou perfect pentru soțul meu!" },
-              { img: "/images/social-proof/cliente-3.png.jpeg", name: "Cristian D.", city: "Timișoara", text: "Calitate premium, nu mă așteptam!" },
-              { img: "/images/social-proof/cliente-4.png.jpeg", name: "Elena R.", city: "Iași", text: "Am comandat a doua bucată 😍" },
-              { img: "/images/social-proof/cliente-5.png.jpeg", name: "Răzvan A.", city: "Brașov", text: "Basul se simte în piept! Top!" },
-              { img: "/images/social-proof/cliente-6.png.jpeg", name: "Ana S.", city: "Constanța", text: "Livrat rapid, ambalaj impecabil" },
-              { img: "/images/social-proof/cliente-7.png.jpeg", name: "Mihai L.", city: "Sibiu", text: "O folosesc zilnic, bateria ține!" },
-              { img: "/images/social-proof/cliente-8.png.jpeg", name: "Diana T.", city: "Oradea", text: "Cea mai bună achiziție din anul ăsta" },
+              { img: "/images/social-proof/cliente-1.png.jpeg", name: "Andrei M.", city: "București", text: "A venit în 3 zile! Sunetul e incredibil 🔥", rating: "5.0", stars: "★★★★★" },
+              { img: "/images/social-proof/cliente-2.png.jpeg", name: "Maria P.", city: "Cluj-Napoca", text: "Cadou perfect pentru soțul meu!", rating: "4.5", stars: "★★★★½" },
+              { img: "/images/social-proof/cliente-3.png.jpeg", name: "Cristian D.", city: "Timișoara", text: "Calitate premium, nu mă așteptam!", rating: "4.75", stars: "★★★★¾" },
+              { img: "/images/social-proof/cliente-4.png.jpeg", name: "Elena R.", city: "Iași", text: "Am comandat a doua bucată 😍", rating: "5.0", stars: "★★★★★" },
+              { img: "/images/social-proof/cliente-5.png.jpeg", name: "Răzvan A.", city: "Brașov", text: "Basul se simte în piept! Top!", rating: "4.5", stars: "★★★★½" },
+              { img: "/images/social-proof/cliente-6.png.jpeg", name: "Ana S.", city: "Constanța", text: "Livrat rapid, ambalaj impecabil", rating: "4.75", stars: "★★★★¾" },
+              { img: "/images/social-proof/cliente-7.png.jpeg", name: "Mihai L.", city: "Sibiu", text: "O folosesc zilnic, bateria ține!", rating: "5.0", stars: "★★★★★" },
+              { img: "/images/social-proof/cliente-8.png.jpeg", name: "Diana T.", city: "Oradea", text: "Cea mai bună achiziție din anul ăsta", rating: "4.5", stars: "★★★★½" },
             ].map((c, i) => (
               <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <div className="aspect-square overflow-hidden">
                   <img src={c.img} alt={`Client ${c.name}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="p-4">
-                  <div className="text-amber-400 text-sm tracking-wider mb-1">★★★★★</div>
-                  <p className="text-sm text-gray-700 italic mb-2">"{c.text}"</p>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="text-amber-400 text-sm">{c.stars}</span>
+                    <span className="text-xs font-bold text-gray-600">{c.rating}</span>
+                  </div>
+                  <p className="text-sm text-gray-700 italic mb-2">&ldquo;{c.text}&rdquo;</p>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold">{c.name}</p>
