@@ -237,13 +237,6 @@ export default async function StorefrontPage() {
         </div>
       </section>
 
-      {/* ====== HERO IMAGE ====== */}
-      <section className="max-w-6xl mx-auto px-6 py-8">
-        <div className="rounded-2xl overflow-hidden">
-          <img src="/images/04-piscina-homem-longe.png" alt="JBL în piscină" className="w-full object-cover" />
-        </div>
-      </section>
-
       {/* ====== BOTTOM MARQUEE ====== */}
       <div className="bg-black text-white py-4 overflow-hidden font-semibold text-sm tracking-widest">
         <div className="flex gap-20 w-max animate-marquee whitespace-nowrap">
