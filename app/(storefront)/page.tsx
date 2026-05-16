@@ -90,6 +90,10 @@ export default async function StorefrontPage() {
             <div className="mb-8">
               <img src="/images/gls-shipping.png" alt="Livrare GLS gratuita in toata Romania in 24-48h" className="w-full rounded-xl" />
             </div>
+            {/* Banner GLS */}
+            <div className="mb-8">
+              <img src="/images/gls-shipping.png" alt="Livrare GLS gratuita in toata Romania in 24-48h" className="w-full rounded-xl" />
+            </div>
 <div className="bg-amber-50 rounded-xl p-6 flex gap-5 items-center mb-8">
               <div className="flex-shrink-0 w-20 h-20 rounded-full bg-white border-2 border-amber-700/30 flex flex-col items-center justify-center">
                 <span className="text-2xl font-extrabold">60</span>
