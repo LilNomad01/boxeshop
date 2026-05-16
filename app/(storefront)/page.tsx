@@ -16,8 +16,6 @@ export default async function StorefrontPage() {
 
   if (!product) {
     return (
-      <>
-        <TrackViewContent />
       <div className="max-w-3xl mx-auto p-12 text-center">
         <h2 className="text-2xl font-bold mb-2">Nenhum produto disponível</h2>
         <p className="text-muted-foreground">Cadastre produtos no painel admin.</p>
@@ -33,6 +31,7 @@ export default async function StorefrontPage() {
 
   return (
     <>
+      <TrackViewContent />
       {/* ====== PRODUCT HERO ====== */}
       <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-2 gap-12 items-start">
