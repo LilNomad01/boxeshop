@@ -47,9 +47,11 @@ export default async function StorefrontPage() {
               <span className="bg-black text-white text-xs px-4 py-1.5 rounded-full font-semibold tracking-wide">SUNET PUTERNIC, ORIUNDE</span>
             </div>
 
-            <p className="text-base text-gray-500 leading-relaxed mb-7">
-              Transformă orice moment într-un mini concert cu sunetul puternic JBL într-un design portabil. Cu conectivitate Bluetooth convenabilă, încărcare USB-C și suport bivolt, este construit pentru iubitorii de muzică ce doresc un sunet puternic acasă sau în deplasare.
-            </p>
+            <div className="flex items-center gap-2 mb-7">
+              <span className="text-amber-400 text-lg tracking-tight">★★★★★</span>
+              <span className="font-bold text-base">4.8</span>
+              <span className="text-gray-500 text-sm">(312 recenzii)</span>
+            </div>
 
             <ul className="space-y-2.5 mb-8 text-base">
               <li>🔊 Sunet masiv JBL pentru fiecare petrecere</li>
