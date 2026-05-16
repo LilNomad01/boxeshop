@@ -402,7 +402,6 @@ export default async function StorefrontPage() {
         <p className="opacity-70">© 2026 JBL Boombox Store. Toate drepturile rezervate.</p>
         <p className="opacity-50">Transport gratuit · Returnări 60 de zile · Suport 24/7</p>
       </footer>
-    </>
   </>
   );
 }
