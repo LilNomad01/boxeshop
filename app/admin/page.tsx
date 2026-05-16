@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { Suspense } from "react";
 import { StatsCard } from "@/components/admin/stats-card";
 import { SalesChart } from "@/components/admin/sales-chart";
