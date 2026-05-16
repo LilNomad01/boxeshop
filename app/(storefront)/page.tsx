@@ -2,7 +2,6 @@ import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/server";
 import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { TestimonialCarousel } from "./testimonials";
 
 export default async function StorefrontPage() {
   const sb = createAdminClient();
@@ -42,7 +41,6 @@ export default async function StorefrontPage() {
               <button className="flex-1 py-4 text-white text-sm font-medium">Vedeți în acțiune</button>
               <button className="flex-1 py-4 text-white/70 text-sm font-medium hover:text-white transition-colors">Vizualizați difuzorul wireless</button>
             </div>
-            <TestimonialCarousel />
           </div>
 
           <div>
@@ -86,21 +84,13 @@ export default async function StorefrontPage() {
             </Link>
             <p className="text-center text-sm text-gray-500 mt-3 mb-6">Achiziționați-vă sistemul de sunet portabil puternic</p>
 
-            <div className="bg-gray-50 rounded-xl p-6 mb-5">
-              <div className="flex justify-around text-sm pb-5 border-b border-gray-200 mb-5">
-                <span>✓ Livrare în 24-48h</span>
-                <span>✓ Transport gratuit</span>
-                <span>✓ Ușor de returnat</span>
-              </div>
-              <h3 className="text-center text-lg font-bold tracking-wide mb-2">SE VINDE REPEDE!</h3>
-              <p className="text-center text-sm text-gray-500 mb-4">Din cauza cererii mari, cantități limitate disponibile</p>
-              <div className="bg-gray-200 rounded-full h-9 relative flex items-center justify-center overflow-hidden">
-                <div className="absolute left-0 top-0 h-full w-[93%] bg-black rounded-full"></div>
-                <span className="relative text-white font-bold text-sm tracking-wide">93% SOLD</span>
-              </div>
-            </div>
 
-            <div className="bg-amber-50 rounded-xl p-6 flex gap-5 items-center mb-8">
+
+                        {/* Banner GLS */}
+            <div className="mb-8">
+              <img src="/images/gls-shipping.png" alt="Livrare GLS gratuita in toata Romania in 24-48h" className="w-full rounded-xl" />
+            </div>
+<div className="bg-amber-50 rounded-xl p-6 flex gap-5 items-center mb-8">
               <div className="flex-shrink-0 w-20 h-20 rounded-full bg-white border-2 border-amber-700/30 flex flex-col items-center justify-center">
                 <span className="text-2xl font-extrabold">60</span>
                 <span className="text-[10px] font-bold text-amber-800">Ziua</span>
