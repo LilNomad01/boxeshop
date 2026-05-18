@@ -76,7 +76,7 @@ export default async function StorefrontPage() {
               <p className="text-[11px] text-red-500 mt-1.5">⚡ 34 de persoane au cumpărat în ultimele 24 de ore</p>
             </div>
 
-            <Link href={checkoutUrl}>
+            <Link href={checkoutUrl} className="hidden md:block">
               <button className="w-full bg-black text-white py-5 rounded-lg text-base font-semibold flex items-center justify-center gap-3 hover:bg-gray-900 transition-colors">
                 <ShoppingCart className="h-5 w-5" />
                 Cumpără cu plată ramburs
