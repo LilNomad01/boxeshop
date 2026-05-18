@@ -6,6 +6,7 @@ const IMAGES = [
   "/images/product/02.png",
   "/images/product/03.png",
   "/images/product/04.png",
+  "/images/product/05.png",
 ];
 
 export function ProductGallery({ alt }: { alt: string }) {
