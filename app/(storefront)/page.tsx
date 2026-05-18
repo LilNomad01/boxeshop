@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TrackViewContent } from "@/app/tiktok-events";
+import { ProductGallery } from "./product-gallery";
 import { createAdminClient } from "@/lib/supabase/server";
 import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
@@ -37,7 +38,7 @@ export default async function StorefrontPage() {
         <div className="grid md:grid-cols-2 gap-12 items-start">
           <div className="md:sticky md:top-24">
             <div className="flex items-center justify-center py-8">
-              <img src="/images/01-produto-principal.png" alt={product.name} className="w-full max-w-lg max-h-[50vh] md:max-h-none object-contain mix-blend-multiply" />
+              <ProductGallery alt={product.name} />
             </div>
           </div>
 
