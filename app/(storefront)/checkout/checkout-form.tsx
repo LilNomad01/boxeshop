@@ -45,6 +45,8 @@ export function CheckoutForm({ product }: { product: any }) {
     };
 
     try {
+      // Salva telefone para o pixel TikTok (Advanced Matching) na success page
+      try { sessionStorage.setItem("ck_phone", payload.customer.phone); } catch {}
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
