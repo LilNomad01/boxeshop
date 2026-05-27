@@ -9,7 +9,7 @@ declare global {
 
 const PRODUCT_ID = "jbl-boombox-bluetooth";
 const PRODUCT_NAME = "JBL Boombox Bluetooth";
-const PRICE = 349;
+const PRICE = 750;
 const CURRENCY = "RON";
 
 function fireWhenReady(fn: () => void, attempts = 20) {
