@@ -13,6 +13,7 @@ export function CheckoutForm({ product }: { product: any }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   // Campos preenchidos pela busca
   const [province, setProvince] = useState("");
@@ -30,6 +31,7 @@ export function CheckoutForm({ product }: { product: any }) {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setAttemptedSubmit(true);
     setLoading(true);
     setError(null);
     const fd = new FormData(e.currentTarget);
@@ -198,8 +200,8 @@ export function CheckoutForm({ product }: { product: any }) {
           </div>
         </div>
 
-        {/* Aviso se NÃO usou autocomplete */}
-        {!verified && (province || city || address1 || postalCode) && (
+        {/* Aviso se NÃO usou autocomplete (só após tentar submeter) */}
+        {attemptedSubmit && !verified && (
           <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
             ⚠️ Adresa nu a fost verificată automat. Te rugăm să folosești câmpul de căutare de mai sus pentru a evita întârzieri la livrare.
           </div>
