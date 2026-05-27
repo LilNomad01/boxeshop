@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { TrackInitiateCheckout } from "@/app/tiktok-events";
 import { useRouter } from "next/navigation";
+import { AddressAutocomplete, type AddressSelection } from "./address-autocomplete";
 
 const COUNTRIES = [
   { code: "RO", id: 142, name: "România" },
@@ -11,6 +12,21 @@ export function CheckoutForm({ product }: { product: any }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [verified, setVerified] = useState(false);
+
+  // Campos preenchidos pela busca
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+
+  function handleAddressSelect(a: AddressSelection) {
+    setProvince(a.county);
+    setCity(a.city);
+    setAddress1(a.housenumber ? `${a.street} ${a.housenumber}` : a.street);
+    setPostalCode(a.postcode);
+    setVerified(true);
+  }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,18 +50,17 @@ export function CheckoutForm({ product }: { product: any }) {
       shipping: {
         countryCode: country.code,
         country_id: country.id,
-        city: String(fd.get("city") ?? ""),
-        province: String(fd.get("province") ?? "") || null,
-        address1: String(fd.get("address1") ?? ""),
+        city: city.trim(),
+        province: province.trim() || null,
+        address1: address1.trim(),
         address2: String(fd.get("address2") ?? "") || undefined,
-        postalCode: String(fd.get("postalCode") ?? "000000"),
+        postalCode: postalCode.trim() || "000000",
       },
       paymentMethod: "cod" as const,
       items: [{ productId: product.id, quantity: 1 }],
     };
 
     try {
-      // Salva telefone para o pixel TikTok (Advanced Matching) na success page
       try { sessionStorage.setItem("ck_phone", payload.customer.phone); } catch {}
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -95,13 +110,30 @@ export function CheckoutForm({ product }: { product: any }) {
           </div>
         </div>
 
+        {/* AUTOCOMPLETE de endereço */}
+        <div>
+          <label className="block font-bold text-base mb-1">Caută adresa ta:</label>
+          <p className="text-xs text-gray-500 italic mb-1">Începe să scrii și alege din listă (recomandat)</p>
+          <AddressAutocomplete onSelect={handleAddressSelect} />
+          {verified && (
+            <p className="text-xs text-green-700 mt-2">✓ Adresă verificată — câmpurile au fost completate automat</p>
+          )}
+        </div>
+
         {/* Județ */}
         <div>
           <label className="block font-bold text-base mb-1">Județ:</label>
-          <p className="text-xs text-gray-500 italic mb-1">(exemplu: Cluj - trebuie scris doar județul)</p>
+          <p className="text-xs text-gray-500 italic mb-1">(exemplu: Cluj)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input name="province" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
+            <input
+              name="province"
+              required
+              value={province}
+              onChange={(e) => { setProvince(e.target.value); setVerified(false); }}
+              placeholder="Scrie aici..."
+              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
+            />
           </div>
         </div>
 
@@ -111,17 +143,31 @@ export function CheckoutForm({ product }: { product: any }) {
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: comuna Floresti, sat Luna de Sus)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input name="city" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
+            <input
+              name="city"
+              required
+              value={city}
+              onChange={(e) => { setCity(e.target.value); setVerified(false); }}
+              placeholder="Scrie aici..."
+              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
+            />
           </div>
         </div>
 
         {/* Strada și Numărul */}
         <div>
           <label className="block font-bold text-base mb-1">Strada și Numărul:</label>
-          <p className="text-xs text-gray-500 italic mb-1">(exemplu: str. Unirii, nr. 34, Bloc B, Etaj 5, Ap. 18)</p>
+          <p className="text-xs text-gray-500 italic mb-1">(exemplu: str. Unirii, nr. 34)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input name="address1" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
+            <input
+              name="address1"
+              required
+              value={address1}
+              onChange={(e) => { setAddress1(e.target.value); setVerified(false); }}
+              placeholder="Scrie aici..."
+              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
+            />
           </div>
         </div>
 
@@ -141,9 +187,23 @@ export function CheckoutForm({ product }: { product: any }) {
           <p className="text-xs text-gray-500 italic mb-1">(exemplu: 400114)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
-            <input name="postalCode" required placeholder="Scrie aici..." className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400" />
+            <input
+              name="postalCode"
+              required
+              value={postalCode}
+              onChange={(e) => { setPostalCode(e.target.value); setVerified(false); }}
+              placeholder="Scrie aici..."
+              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
+            />
           </div>
         </div>
+
+        {/* Aviso se NÃO usou autocomplete */}
+        {!verified && (province || city || address1 || postalCode) && (
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+            ⚠️ Adresa nu a fost verificată automat. Te rugăm să folosești câmpul de căutare de mai sus pentru a evita întârzieri la livrare.
+          </div>
+        )}
 
         {/* Livrare */}
         <div className="pt-3">
