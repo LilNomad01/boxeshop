@@ -20,11 +20,13 @@ export function CheckoutForm({ product }: { product: any }) {
   const [city, setCity] = useState("");
   const [address1, setAddress1] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
 
   function handleAddressSelect(a: AddressSelection) {
     setProvince(a.county);
     setCity(a.city);
-    setAddress1(a.housenumber ? `${a.street} ${a.housenumber}` : a.street);
+    setAddress1(a.street);
+    setHouseNumber(a.housenumber || "");
     setPostalCode(a.postcode);
     setVerified(true);
   }
@@ -54,7 +56,7 @@ export function CheckoutForm({ product }: { product: any }) {
         country_id: country.id,
         city: city.trim(),
         province: province.trim() || null,
-        address1: address1.trim(),
+        address1: `${address1.trim()} ${houseNumber.trim()}`.trim(),
         address2: String(fd.get("address2") ?? "") || undefined,
         postalCode: postalCode.trim() || "000000",
       },
@@ -156,10 +158,10 @@ export function CheckoutForm({ product }: { product: any }) {
           </div>
         </div>
 
-        {/* Strada și Numărul */}
+        {/* Strada (nome) */}
         <div>
-          <label className="block font-bold text-base mb-1">Strada și Numărul:</label>
-          <p className="text-xs text-gray-500 italic mb-1">(exemplu: str. Unirii, nr. 34)</p>
+          <label className="block font-bold text-base mb-1">Strada:</label>
+          <p className="text-xs text-gray-500 italic mb-1">(exemplu: Strada Unirii)</p>
           <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
             <span className="text-amber-600">👉</span>
             <input
@@ -168,6 +170,23 @@ export function CheckoutForm({ product }: { product: any }) {
               value={address1}
               onChange={(e) => { setAddress1(e.target.value); setVerified(false); }}
               placeholder="Scrie aici..."
+              className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
+            />
+          </div>
+        </div>
+
+        {/* Numarul casei (campo separado, obrigatorio) */}
+        <div>
+          <label className="block font-bold text-base mb-1">Numărul casei: <span className="text-red-600">*</span></label>
+          <p className="text-xs text-gray-500 italic mb-1">(exemplu: 34, 246A, 12B)</p>
+          <div className="flex items-center gap-2 border-b-2 border-gray-300 pb-2 focus-within:border-blue-500">
+            <span className="text-amber-600">🏠</span>
+            <input
+              name="houseNumber"
+              required
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
+              placeholder="Scrie numărul aici..."
               className="flex-1 outline-none text-base bg-transparent placeholder:text-gray-400"
             />
           </div>
