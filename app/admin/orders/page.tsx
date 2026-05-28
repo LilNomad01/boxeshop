@@ -3,6 +3,9 @@ import Link from "next/link";
 
 const RON_TO_BRL = 1.15;
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function OrdersPage() {
   const sb = createAdminClient();
   const { data: orders } = await sb.from("orders").select("*").order("created_at", { ascending: false });
