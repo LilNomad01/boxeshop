@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/server";
+import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
 const RON_TO_BRL = 1.15;
@@ -80,11 +81,11 @@ export default async function OrdersPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg border p-4">
             <p className="text-xs text-gray-500">Total RON</p>
-            <p className="text-xl font-bold">{orders.reduce((s: number, o: any) => s + Number(o.total_price), 0).toFixed(2)} RON</p>
+            <p className="text-xl font-bold">{formatCurrency(orders.reduce((s: number, o: any) => s + Number(o.total_price), 0), "RON")}</p>
           </div>
           <div className="bg-white rounded-lg border p-4">
             <p className="text-xs text-gray-500">Total BRL</p>
-            <p className="text-xl font-bold text-green-700">R$ {(orders.reduce((s: number, o: any) => s + Number(o.total_price), 0) * RON_TO_BRL).toFixed(2)}</p>
+            <p className="text-xl font-bold text-green-700">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(orders.reduce((s: number, o: any) => s + Number(o.total_price), 0) * RON_TO_BRL)}</p>
           </div>
           <div className="bg-white rounded-lg border p-4">
             <p className="text-xs text-gray-500">Pedidos</p>
