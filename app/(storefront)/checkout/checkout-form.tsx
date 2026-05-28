@@ -34,8 +34,23 @@ export function CheckoutForm({ product }: { product: any }) {
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setAttemptedSubmit(true);
-    setLoading(true);
     setError(null);
+
+    // Validação: address1 precisa ter pelo menos uma letra (nome de rua, não só número)
+    const hasStreetName = /[a-zA-ZăâîșțĂÂÎȘȚ]/.test(address1.trim());
+    if (!hasStreetName) {
+      setError("Te rugăm să selectezi o adresă validă din lista de căutare de mai sus.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    // Validação: numarul casei obrigatorio
+    if (!houseNumber.trim()) {
+      setError("Te rugăm să completezi numărul casei.");
+      return;
+    }
+
+    setLoading(true);
     const fd = new FormData(e.currentTarget);
 
     const fullName = String(fd.get("fullName") ?? "").trim();
@@ -221,8 +236,8 @@ export function CheckoutForm({ product }: { product: any }) {
 
         {/* Aviso se NÃO usou autocomplete (só após tentar submeter) */}
         {attemptedSubmit && !verified && (
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
-            ⚠️ Adresa nu a fost verificată automat. Te rugăm să folosești câmpul de căutare de mai sus pentru a evita întârzieri la livrare.
+          <div className="p-3 bg-amber-50 border-2 border-amber-300 rounded-lg text-xs text-amber-900">
+            <strong>⚠️ Adresă neverificată</strong> — Te rugăm să folosești câmpul "Caută adresa ta" de mai sus și să selectezi o adresă din lista de sugestii pentru a evita întârzieri la livrare.
           </div>
         )}
 
